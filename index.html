@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Water Intake Checker</title>
+  <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+  <h1>💧 How Much Water Should You Drink?</h1>
+  <p>Enter your weight to calculate your recommended daily water.</p>
+  <input type="number" id="weight" placeholder="Your weight in kg">
+  <button onclick="calWater()">Calculate</button>
+  <div id="result"></div>
+
+  <div id="bottle">
+    <div id="waterLevel"></div>
+  </div>
+
+  <div id="drinkInput" style="display:none;">
+    <p>Enter how much water you've drunk (in milliliters):</p>
+    <input type="number" id="drunk" step="1" placeholder="Milliliters">
+    <button onclick="fillBottle()">Add</button>
+  </div>
+
+  <div id="motivation"></div>
+
+  <script>
+    let requiredWater = 0;
+    let currentWater = 0;
+
+    function calWater() {
+      const weight = document.getElementById('weight').value;
+      if (!weight || weight <= 0) {
+        document.getElementById('result').textContent = "Please enter a valid weight.";
+        return;
+      }
+      requiredWater = Math.round(weight * 33); // in milliliters
+      currentWater = 0;
+      document.getElementById('result').textContent = `You should drink about ${requiredWater} ml of water daily.`;
+      document.getElementById('drinkInput').style.display = 'block';
+      updateBottleDisplay();
+    }
+
+    function fillBottle() {
+      const input = document.getElementById('drunk').value;
+      const addedWater = parseInt(input);
+      if (!addedWater || addedWater <= 0) return;
+
+      currentWater = Math.min(currentWater + addedWater, requiredWater);
+      updateBottleDisplay();
+    }
+
+    function updateBottleDisplay() {
+      const percent = (currentWater / requiredWater) * 100;
+      document.getElementById('waterLevel').style.height = `${percent}%`;
+
+      let message = "";
+      if (percent < 30) {
+        message = "Keep going! You're doing great!";
+      } else if (percent < 70) {
+        message = "Almost there, stay hydrated!";
+      } else if (percent < 100) {
+        message = "You're so close, finish strong!";
+      } else {
+        message = "🎉 Congrats! You've met your water goal!";
+      }
+      document.getElementById('motivation').textContent = message;
+    }
+  </script>
+</body>
+</html>
